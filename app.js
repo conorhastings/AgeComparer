@@ -44,6 +44,6 @@ app.get('/nba', function(req, res){
 
 
 var server = app.listen(port, function(){
-	console.log('listening on *:3000');
+	console.log('listening on'+port);
 });
 
