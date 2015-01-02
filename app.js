@@ -1,7 +1,9 @@
 var express = require('express');
 var app = express();
 var _ = require('underscore');
-var fs = require('fs')
+var fs = require('fs');
+
+var port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
@@ -41,7 +43,7 @@ app.get('/nba', function(req, res){
 
 
 
-var server = app.listen(3000, function(){
+var server = app.listen(port, function(){
 	console.log('listening on *:3000');
 });
 
