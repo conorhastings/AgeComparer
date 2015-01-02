@@ -1,0 +1,26 @@
+{
+  "name": "player_ages",
+  "version": "0.0.0",
+  "description": "compare player ages",
+  "main": "app.js",
+  "dependencies": {
+    "cheerio": "^0.18.0",
+    "request": "^2.51.0",
+    "express": "^4.10.6",
+    "underscore": "^1.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/conorhastings/AgeComparer.git"
+  },
+  "author": "Conor Hastings",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/conorhastings/AgeComparer/issues"
+  },
+  "homepage": "https://github.com/conorhastings/AgeComparer"
+}
