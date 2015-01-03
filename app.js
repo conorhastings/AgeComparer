@@ -37,6 +37,35 @@ app.get('/nba', function(req, res){
 
 
 });
+app.get('/nfl', function(req, res){
+	var birthday = new Date(req.query.birthday);
+	fs.readFile('./public/nfl_players.json', 'utf8', function (err,data) {
+		if (err) {
+			return console.log(err);
+		}
+		totalPlayers = JSON.parse(data);
+		youngerPlayers = [];
+		_.each(totalPlayers,function(player){
+			var playerBirthday = new Date(player);
+			if(birthday - playerBirthday < 0){
+				youngerPlayers.push(player)
+			}
+
+
+
+
+
+		})
+		console.log(totalPlayers.length)
+		var percentageOlder = ((youngerPlayers.length/totalPlayers.length)*100).toFixed(2);
+		res.send({nfl:percentageOlder});
+
+	});
+
+
+});
+
+
 
 
 
