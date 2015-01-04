@@ -17,6 +17,7 @@
 		color:purple;
 	}
 	</style>
+	<script src="./chart.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -25,9 +26,13 @@
 		<input type="date" class="birthday"><br>
 		<button class="submit">Submit</button>
 		<h1 class="nba"></h1>
+		<canvas id="nbaChart"></canvas>
 		<h1 class="nfl"></h1>
+		<canvas id="nflChart"></canvas>
 		<h1 class="mlb"></h1>
+		<canvas id="mlbChart"></canvas>
 		<h1 class="nhl"></h1>
+		<canvas id="nhlChart"></canvas>
 	</div>
 </body>
 <script type="text/javascript">
@@ -38,14 +43,28 @@ $('.submit').on('click', function(){
 
 		console.log(response)
 		$('.nba').text(response.nba+' percent of NBA players are younger than you')
+		var nbaChartData = [{value:parseInt(response.nba),color:"#D0104C",highlight:"#E87A90",label:"% Players Younger"},{value:(100-parseInt(response.nba)),color:"#8E354A",highlight:"#FEDFE1",label:"% Players Older"}]
+		makeDoughnutChart("#nbaChart",nbaChartData)
 		$('.nfl').text(response.nfl+' percent of NFL players are younger than you')
+		var nflChartData = [{value:parseInt(response.nfl),color:"#58B2DC",highlight:"#006284",label:"% Players Younger"},{value:(100-parseInt(response.nfl)),color:"#2E5C6E",highlight:"#2EA9DF",label:"% Players Older"}]
+		makeDoughnutChart("#nflChart",nflChartData)
 		$('.mlb').text(response.mlb+' percent of MLB players are younger than you')
+		var mlbChartData = [{value:parseInt(response.mlb),color:"#227D51",highlight:"#A8D8B9",label:"% Players Younger"},{value:(100-parseInt(response.mlb)),color:"#00AA90",highlight:"#66BAB7",label:"% Players Older"}]
+		makeDoughnutChart("#mlbChart",mlbChartData)
 		$('.nhl').text(response.nhl+' percent of NHL players are younger than you')
+		var nhlChartData = [{value:parseInt(response.nhl),color:"#533D5B",highlight:"#B28FCE",label:"% Players Younger"},{value:(100-parseInt(response.nhl)),color:"#72636E",highlight:"#6D2E5B",label:"% Players Older"}]
+		makeDoughnutChart("#nhlChart",nhlChartData)
 
 
 
 	})
 });
+
+
+function makeDoughnutChart(canvas,chartData){
+	var ctx = $(canvas).get(0).getContext('2d');
+	var donutChart = new Chart(ctx).Doughnut(chartData, { segmentShowStroke: true, segmentStrokeColor: '#fff', segmentStrokeWidth: 2, percentageInnerCutout: 50, animationSteps: 100, animationEasing: 'easeOutBounce', animateRotate: true})
+}
 
 
 </script>

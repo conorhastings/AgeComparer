@@ -7,7 +7,7 @@ var async = require('async');
 var port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/public'));
 
-
+//birthday should be a javascript Date object
 function percentageOlder(totalPlayers, birthday){
 	var youngerPlayers = [];
 	_.each(totalPlayers,function(player){
