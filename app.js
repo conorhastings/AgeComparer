@@ -28,7 +28,7 @@ app.get('/', function(req, res){
 app.get('/agedata', function(req, res){
 	var birthday = new Date(req.query.birthday);
 
-	var files = ['./public/nba_players.json','./public/nfl_players.json']
+	var files = ['./public/nba_players.json','./public/nfl_players.json','./public/mlb_players.json','./public/nhl_players.json']
 
 	async.map(files, fs.readFile, function (err, data) {
 
@@ -42,6 +42,10 @@ app.get('/agedata', function(req, res){
 
 			}else if(index === 1){
 				returnData.nfl = percentageOlder(playerData, birthday);
+			}else if(index === 2){
+				returnData.mlb = percentageOlder(playerData, birthday);
+			}else if(index === 3){
+				returnData.nhl = percentageOlder(playerData, birthday);
 			}
 
 		})

@@ -8,6 +8,8 @@
 	<button class="submit">Submit</button>
 	<h1 class="nba"></h1>
 	<h1 class="nfl"></h1>
+	<h1 class="mlb"></h1>
+	<h1 class="nhl"></h1>
 </body>
 <script type="text/javascript">
 $('.submit').on('click', function(){
@@ -18,6 +20,9 @@ $('.submit').on('click', function(){
 		console.log(response)
 		$('.nba').text(response.nba+' percent of NBA players are younger than you')
 		$('.nfl').text(response.nfl+' percent of NFL players are younger than you')
+		$('.mlb').text(response.mlb+' percent of MLB players are younger than you')
+		$('.nhl').text(response.nhl+' percent of NHL players are younger than you')
+
 
 
 	})
