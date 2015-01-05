@@ -3,6 +3,7 @@ var app = express();
 var _ = require('underscore');
 var fs = require('fs');
 var async = require('async');
+var moment = require('moment');
 
 var port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/public'));
@@ -22,6 +23,22 @@ function percentageYounger(totalPlayers, birthday){
 };
 
 
+function averageAge(totalPlayers){
+	var ages = [];
+	_.each(totalPlayers, function(player){
+
+		var birthday = moment(new Date(player));
+		var today = moment();
+		ages.push(today.diff(birthday,'years',true));
+	})
+	totalAge = 0;
+	_.each(ages,function(age){
+		totalAge += age;
+	})
+	return totalAge / totalPlayers.length;
+}
+
+
 app.get('/', function(req, res){
 	res.sendFile('/public/index.html', {"root": __dirname});
 });
@@ -36,11 +53,10 @@ app.get('/agedata', function(req, res){
 		var returnData = {}
 		data.forEach(function(file,index){
 			var playerData = JSON.parse(file.toString());
-			console.log(playerData.length)
+
 
 			if(index === 0){
 				returnData.nba = percentageYounger(playerData, birthday);
-
 			}else if(index === 1){
 				returnData.nfl = percentageYounger(playerData, birthday);
 			}else if(index === 2){

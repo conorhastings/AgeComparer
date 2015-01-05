@@ -1,7 +1,9 @@
 var request = require('request');
 var cheerio = require('cheerio');
 var _ = require('underscore');
-var fs = require('fs')
+
+var fs = require('fs');
+
 
 var activeNHLPlayers = [];
 var months = [{text:"January",number:1}, {text:"February", number:2}, {text:"March", number:3}, {text:"April", number:4}, {text:"May", number:5}, {text:"June", number:6}, {text:"July", number:7}, {text:"August", number:8}, {text:"September", number:9}, {text:"October", number:10},{text:"November", number:11},{text:"December", number:12}]
@@ -28,7 +30,7 @@ _.each(months,function(month){
 						if(player.children[9].children[0].data === '2015'){
 							activeNHLPlayers.push(month.text+" "+day+", "+player.children[5].children[0].data)
 							fs.writeFileSync("./public/nhl_players.json", JSON.stringify(activeNHLPlayers))
-							
+
 						}
 					}
 				})
