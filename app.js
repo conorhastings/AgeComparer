@@ -35,7 +35,7 @@ function averageAge(totalPlayers){
 	_.each(ages,function(age){
 		totalAge += age;
 	})
-	return totalAge / totalPlayers.length;
+	return (totalAge / totalPlayers.length).toFixed(2);
 }
 
 
@@ -56,13 +56,13 @@ app.get('/agedata', function(req, res){
 
 
 			if(index === 0){
-				returnData.nba = percentageYounger(playerData, birthday);
+				returnData.nba = {percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)};
 			}else if(index === 1){
-				returnData.nfl = percentageYounger(playerData, birthday);
+				returnData.nfl ={percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)}
 			}else if(index === 2){
-				returnData.mlb = percentageYounger(playerData, birthday);
+				returnData.mlb = {percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)}
 			}else if(index === 3){
-				returnData.nhl = percentageYounger(playerData, birthday);
+				returnData.nhl = {percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)}
 			}
 
 		})
