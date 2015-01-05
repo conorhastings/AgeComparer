@@ -8,16 +8,17 @@ var port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/public'));
 
 //birthday should be a javascript Date object
-function percentageOlder(totalPlayers, birthday){
-	var youngerPlayers = [];
+//totalPlayers should be an array of dates, but not Date Objects
+function percentageYounger(totalPlayers, birthday){
+	var youngerPlayers = 0;
 	_.each(totalPlayers,function(player){
 		var playerBirthday = new Date(player);
 		if(birthday - playerBirthday < 0){
-			youngerPlayers.push(player);
+			youngerPlayers += 1;
 		}
 	})
-	var percentageOlder = ((youngerPlayers.length/totalPlayers.length)*100).toFixed(2);
-	return percentageOlder;
+	var percentageYounger = ((youngerPlayers/totalPlayers.length)*100).toFixed(2);
+	return percentageYounger;
 };
 
 
@@ -38,14 +39,14 @@ app.get('/agedata', function(req, res){
 			console.log(playerData.length)
 
 			if(index === 0){
-				returnData.nba = percentageOlder(playerData, birthday);
+				returnData.nba = percentageYounger(playerData, birthday);
 
 			}else if(index === 1){
-				returnData.nfl = percentageOlder(playerData, birthday);
+				returnData.nfl = percentageYounger(playerData, birthday);
 			}else if(index === 2){
-				returnData.mlb = percentageOlder(playerData, birthday);
+				returnData.mlb = percentageYounger(playerData, birthday);
 			}else if(index === 3){
-				returnData.nhl = percentageOlder(playerData, birthday);
+				returnData.nhl = percentageYounger(playerData, birthday);
 			}
 
 		})
@@ -54,13 +55,6 @@ app.get('/agedata', function(req, res){
 
 
 });
-
-
-
-
-
-
-
 
 
 var server = app.listen(port, function(){
