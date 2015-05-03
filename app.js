@@ -58,11 +58,11 @@ app.get('/agedata', function(req, res){
 			if(index === 0){
 				returnData.nba = {percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)};
 			}else if(index === 1){
-				returnData.nfl ={percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)}
+				returnData.nfl ={percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)};
 			}else if(index === 2){
-				returnData.mlb = {percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)}
+				returnData.mlb = {percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)};
 			}else if(index === 3){
-				returnData.nhl = {percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)}
+				returnData.nhl = {percentageYounger:percentageYounger(playerData, birthday),averageAge:averageAge(playerData)};
 			}
 
 		})

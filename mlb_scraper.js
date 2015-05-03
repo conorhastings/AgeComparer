@@ -22,7 +22,7 @@ _.each(months,function(month){
 				$ = cheerio.load(body);
 				totalPlayers = $('.sortable').find('tr')
 				_.each(totalPlayers, function(player){
-					if(player.children[11].children[0].data === '2014'){
+					if(player.children[11].children[0].data === '2015'){
 						activeMLBPlayers.push(month.text+" "+day+", "+player.children[5].children[0].data)
 						fs.writeFileSync("./public/mlb_players.json", JSON.stringify(activeMLBPlayers))
 		
