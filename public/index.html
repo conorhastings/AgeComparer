@@ -72,7 +72,7 @@
     </h1>
   </body>
   <script>
-    document.getElementById("submit").addEventListener("click", () => {
+    const callback = () => {
       const birthday = document.getElementById("birthday").value;
       fetch(`/agedata?birthday=${birthday}`)
         .then(res => res.json())
@@ -99,16 +99,16 @@
             "nba-age"
           ).innerText = `The average age of an NBA player is ${
             response.nba.averageAge
-					}`;
-					          document.getElementById("nba-progress").style.display = "initial";
+          }`;
+          document.getElementById("nba-progress").style.display = "initial";
 
           document.getElementById("nfl").innerText = `${
             response.nfl.percentageYounger
           } percent of NFL players are younger than you`;
           document.getElementById("nfl-progress").value = parseInt(
             response.nfl.percentageYounger
-					);
-					          document.getElementById("nfl-progress").style.display = "initial";
+          );
+          document.getElementById("nfl-progress").style.display = "initial";
 
           document.getElementById(
             "nfl-age"
@@ -116,6 +116,12 @@
             response.nfl.averageAge
           }`;
         });
+    };
+    document.getElementById("birthday").addEventListener("keydown", event => {
+      if (event.code === "Enter") {
+        callback();
+      }
     });
+    document.getElementById("submit").addEventListener("click", callback);
   </script>
 </html>
