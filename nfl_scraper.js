@@ -1,38 +1,50 @@
-var request = require('request');
-var cheerio = require('cheerio');
-var _ = require('underscore');
-var fs = require('fs')
-
-var activeNFLPlayers = [];
-var months = [{text:"January",number:1}, {text:"February", number:2}, {text:"March", number:3}, {text:"April", number:4}, {text:"May", number:5}, {text:"June", number:6}, {text:"July", number:7}, {text:"August", number:8}, {text:"September", number:9}, {text:"October", number:10},{text:"November", number:11},{text:"December", number:12}]
-var days = _.range(1,32);
-// console.log(months)
-// console.log(days)
-
-_.each(months,function(month){
-	// console.log(month)
-	_.each(days, function(day){
-
-
-
-
-		request('http://www.pro-football-reference.com/friv/birthdays.cgi?month='+month.number+'&day='+day, function (error, response, body) {
-			if (!error && response.statusCode == 200) {
-
-				$ = cheerio.load(body);
-				totalPlayers = $('.sortable').find('tr')
-				_.each(totalPlayers, function(player){
-					if(player.children[11].children[0].data === '2014'){
-						activeNFLPlayers.push(month.text+" "+day+", "+player.children[7].children[0].data)
-						fs.writeFileSync("./public/nfl_players.json", JSON.stringify(activeNFLPlayers))
-		
-					}
-				})
-			}
-
-		})
-	})
-})
-	
-
-
+const cheerio = require("cheerio");
+const fs = require("fs");
+const axios = require("axios");
+const teamUrls = [
+  "https://www.lineups.com/nfl/roster/arizona-cardinals",
+  "https://www.lineups.com/nfl/roster/atlanta-falcons",
+  "https://www.lineups.com/nfl/roster/baltimore-ravens",
+  "https://www.lineups.com/nfl/roster/buffalo-bills",
+  "https://www.lineups.com/nfl/roster/carolina-panthers",
+  "https://www.lineups.com/nfl/roster/chicago-bears",
+  "https://www.lineups.com/nfl/roster/cincinnati-bengals",
+  "https://www.lineups.com/nfl/roster/cleveland-browns",
+  "https://www.lineups.com/nfl/roster/dallas-cowboys",
+  "https://www.lineups.com/nfl/roster/denver-broncos",
+  "https://www.lineups.com/nfl/roster/detroit-lions",
+  "https://www.lineups.com/nfl/roster/green-bay-packers",
+  "https://www.lineups.com/nfl/roster/houston-texans",
+  "https://www.lineups.com/nfl/roster/indianapolis-colts",
+  "https://www.lineups.com/nfl/roster/jacksonville-jaguars",
+  "https://www.lineups.com/nfl/roster/kansas-city-chiefs",
+  "https://www.lineups.com/nfl/roster/los-angeles-chargers",
+  "https://www.lineups.com/nfl/roster/los-angeles-rams",
+  "https://www.lineups.com/nfl/roster/miami-dolphins",
+  "https://www.lineups.com/nfl/roster/minnesota-vikings",
+  "https://www.lineups.com/nfl/roster/new-england-patriots",
+  "https://www.lineups.com/nfl/roster/new-orleans-saints",
+  "https://www.lineups.com/nfl/roster/new-york-giants",
+  "https://www.lineups.com/nfl/roster/new-york-jets",
+  "https://www.lineups.com/nfl/roster/oakland-raiders",
+  "https://www.lineups.com/nfl/roster/philadelphia-eagles",
+  "https://www.lineups.com/nfl/roster/pittsburgh-steelers",
+  "https://www.lineups.com/nfl/roster/san-francisco-49ers",
+  "https://www.lineups.com/nfl/roster/seattle-seahawks",
+  "https://www.lineups.com/nfl/roster/tampa-bay-buccaneers",
+  "https://www.lineups.com/nfl/roster/tennessee-titans",
+  "https://www.lineups.com/nfl/roster/washington-redskins"
+];
+teamUrls.forEach((url, i) =>
+  axios(url).then(response => {
+    const dom = cheerio.load(response.data);
+    dom(".t-content")
+      .find("td:nth-child(10)")
+      .each(function() {
+        const text = dom(this).text();
+        if (text) {
+          fs.appendFileSync("./public/nfl.json", `"${text}",\n`);
+        }
+      });
+  })
+);

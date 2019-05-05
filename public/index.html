@@ -1,100 +1,121 @@
 <html>
-<head>
-	<title>You're Much Older Than The Athletes You Cheer For</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-	<style>
-	.nba{
-		color:red;
-	}
-	.nfl{
-		color:blue;
-	}
-	.mlb{
-		color:green;
-	}
-	.nhl{
-		color:purple;
-	}
-	</style>
-	<script src="./chart.js"></script>
-</head>
-<body>
-	<div class="container">
-		<h3>Enter your birthday to see what percentage of professional athletes in each sport are younger than you(MM/DD/YYYY)</h3>
+  <head>
+    <title>You're Much Older Than The Athletes You Cheer For</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://unpkg.com/nes.css@2.1.0/css/nes.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=VT323"
+      rel="stylesheet"
+    />
+    <style>
+      .nba {
+        color: red;
+      }
+      .nfl {
+        color: blue;
+      }
+      .mlb {
+        color: green;
+      }
+      .nhl {
+        color: purple;
+      }
+    </style>
+    <script src="./chart.js"></script>
+  </head>
+  <body
+    style="display: flex; flex-direction: column; align-items: center; font-family: VT323; background-image: linear-gradient(rgba(97, 8, 156, 0.5), rgb(247, 247, 139)),
+ url('./sports.gif'); padding: 24px;"
+  >
+    <h1 style="color: cyan;">
+      Enter your birthday to see what percentage of professional athletes in
+      each sport are younger than you(MM/DD/YYYY)
+    </h1>
 
-		<input type="date" class="birthday"><br><br>
-		<button class="btn btn-danger submit">Submit</button>
-		<h1 class="nba"></h1>
-		<canvas id="nbaChart"></canvas>
-		<h3 class="nba-age"></h3>
-		<h1 class="nfl"></h1>
-		<canvas id="nflChart"></canvas>
-		<h3 class="nfl-age"></h3>
-		<h1 class="mlb"></h1>
-		<canvas id="mlbChart"></canvas>
-		<h3 class="mlb-age"></h3>
-		<h1 class="nhl"></h1>
-		<canvas id="nhlChart"></canvas>
-		<h3 class="nhl-age"></h3>
-		<br>
-		<br>
-		<h3><a href="https://github.com/conorhastings/AgeComparer">Source Code</h3>
-	</div>
-</body>
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <input
+      type="date"
+      class="nes-input"
+      id="birthday"
+      style="width: 50%; margin-bottom: 16px;"
+    />
+    <button class="nes-btn is-primary" id="submit">Submit</button>
+    <h1 id="nba" style="color: mediumspringgreen;"></h1>
+    <progress
+      id="nba-progress"
+      class="nes-progress is-pattern"
+      max="100"
+      style="display: none;"
+    ></progress>
+    <h1 id="nba-age" style="color: mediumspringgreen;"></h1>
+    <h1 id="nfl" style="color: tomato;"></h1>
+    <progress
+      id="nfl-progress"
+      class="nes-progress is-pattern"
+      max="100"
+      style="display: none;"
+    ></progress>
+    <h1 id="nfl-age" style="color: tomato;"></h1>
+    <h1 id="mlb" style="color: maroon;"></h1>
+    <progress
+      id="mlb-progress"
+      class="nes-progress is-pattern"
+      max="100"
+      style="display: none;"
+    ></progress>
+    <h1 id="mlb-age" style="color: maroon;"></h1>
 
-ga('create', 'UA-54659001-2', 'auto');
-ga('send', 'pageview');
+    <h1>
+      <a href="https://github.com/conorhastings/AgeComparer">Source Code</a>
+    </h1>
+  </body>
+  <script>
+    document.getElementById("submit").addEventListener("click", () => {
+      const birthday = document.getElementById("birthday").value;
+      fetch(`/agedata?birthday=${birthday}`)
+        .then(res => res.json())
+        .then(response => {
+          document.getElementById("mlb").innerText = `${
+            response.mlb.percentageYounger
+          } percent of MLB players are younger than you`;
+          document.getElementById("mlb-progress").value = parseInt(
+            response.mlb.percentageYounger
+          );
+          document.getElementById("mlb-progress").style.display = "initial";
+          document.getElementById(
+            "mlb-age"
+          ).innerText = `The average age of an MLB player is ${
+            response.mlb.averageAge
+          }`;
+          document.getElementById("nba").innerText = `${
+            response.nba.percentageYounger
+          } percent of NBA players are younger than you`;
+          document.getElementById("nba-progress").value = parseInt(
+            response.nba.percentageYounger
+          );
+          document.getElementById(
+            "nba-age"
+          ).innerText = `The average age of an NBA player is ${
+            response.nba.averageAge
+					}`;
+					          document.getElementById("nba-progress").style.display = "initial";
 
-</script>
-<script>
-$('.submit').on('click', function(){
-	var birthday = $('.birthday')
-	birthday = birthday[0].value
-	$.get('/agedata?birthday='+birthday).done(function(response){
+          document.getElementById("nfl").innerText = `${
+            response.nfl.percentageYounger
+          } percent of NFL players are younger than you`;
+          document.getElementById("nfl-progress").value = parseInt(
+            response.nfl.percentageYounger
+					);
+					          document.getElementById("nfl-progress").style.display = "initial";
 
-		$('.nba').text(response.nba.percentageYounger+' percent of NBA players are younger than you')
-		$('.nba-age').text('The average age of an NBA player is '+response.nba.averageAge)
-		
-		var nbaChartData = [{value:parseInt(response.nba.percentageYounger),color:"#D0104C",highlight:"#E87A90",label:"% Players Younger"},{value:(100-parseInt(response.nba.percentageYounger)),color:"#8E354A",highlight:"#FEDFE1",label:"% Players Older"}]
-		
-		makeDoughnutChart("#nbaChart",nbaChartData)
-		
-		$('.nfl').text(response.nfl.percentageYounger+' percent of NFL players are younger than you')
-		$('.nfl-age').text('The average age of an NFL player is '+response.nfl.averageAge)
-		
-		var nflChartData = [{value:parseInt(response.nfl.percentageYounger),color:"#58B2DC",highlight:"#006284",label:"% Players Younger"},{value:(100-parseInt(response.nfl.percentageYounger)),color:"#2E5C6E",highlight:"#2EA9DF",label:"% Players Older"}]
-		
-		makeDoughnutChart("#nflChart",nflChartData)
-		
-		$('.mlb').text(response.mlb.percentageYounger+' percent of MLB players are younger than you')
-		$('.mlb-age').text('The average age of an MLB player is '+response.mlb.averageAge)
-		
-		var mlbChartData = [{value:parseInt(response.mlb.percentageYounger),color:"#227D51",highlight:"#A8D8B9",label:"% Players Younger"},{value:(100-parseInt(response.mlb.percentageYounger)),color:"#00AA90",highlight:"#66BAB7",label:"% Players Older"}]
-		makeDoughnutChart("#mlbChart",mlbChartData)
-		$('.nhl').text(response.nhl.percentageYounger+' percent of NHL players are younger than you')
-		$('.nhl-age').text('The average age of an NHL player is '+response.nhl.averageAge)
-		
-		var nhlChartData = [{value:parseInt(response.nhl.percentageYounger),color:"#533D5B",highlight:"#B28FCE",label:"% Players Younger"},{value:(100-parseInt(response.nhl.percentageYounger)),color:"#72636E",highlight:"#6D2E5B",label:"% Players Older"}]
-		makeDoughnutChart("#nhlChart",nhlChartData)
-
-
-
-	})
-});
-
-
-function makeDoughnutChart(canvas,chartData){
-	var ctx = $(canvas).get(0).getContext('2d');
-	var donutChart = new Chart(ctx).Doughnut(chartData, { segmentShowStroke: true, segmentStrokeColor: '#fff', segmentStrokeWidth: 2, percentageInnerCutout: 50, animationSteps: 100, animationEasing: 'easeOutBounce', animateRotate: true})
-}
-
-
-</script>
+          document.getElementById(
+            "nfl-age"
+          ).innerText = `The average age of an NFL player is ${
+            response.nfl.averageAge
+          }`;
+        });
+    });
+  </script>
 </html>

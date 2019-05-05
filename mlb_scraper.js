@@ -1,38 +1,48 @@
-var request = require('request');
-var cheerio = require('cheerio');
-var _ = require('underscore');
-var fs = require('fs')
+const cheerio = require('cheerio');
+const fs = require('fs')
+const axios = require('axios');
+const teamUrls = [
+  "https://www.lineups.com/mlb/roster/arizona-diamondbacks",
+  "https://www.lineups.com/mlb/roster/atlanta-braves",
+  "https://www.lineups.com/mlb/roster/baltimore-orioles",
+  "https://www.lineups.com/mlb/roster/boston-red-sox",
+  "https://www.lineups.com/mlb/roster/chicago-cubs",
+  "https://www.lineups.com/mlb/roster/chicago-white-sox",
+  "https://www.lineups.com/mlb/roster/cincinnati-reds",
+  "https://www.lineups.com/mlb/roster/cleveland-indians",
+  "https://www.lineups.com/mlb/roster/colorado-rockies",
+  "https://www.lineups.com/mlb/roster/detroit-tigers",
+  "https://www.lineups.com/mlb/roster/houston-astros",
+  "https://www.lineups.com/mlb/roster/kansas-city-royals",
+  "https://www.lineups.com/mlb/roster/los-angeles-angels",
+  "https://www.lineups.com/mlb/roster/los-angeles-dodgers",
+  "https://www.lineups.com/mlb/roster/miami-marlins",
+  "https://www.lineups.com/mlb/roster/milwaukee-brewers",
+  "https://www.lineups.com/mlb/roster/minnesota-twins",
+  "https://www.lineups.com/mlb/roster/new-york-mets",
+  "https://www.lineups.com/mlb/roster/new-york-yankees",
+  "https://www.lineups.com/mlb/roster/oakland-athletics",
+  "https://www.lineups.com/mlb/roster/philadelphia-phillies",
+  "https://www.lineups.com/mlb/roster/pittsburgh-pirates",
+  "https://www.lineups.com/mlb/roster/san-diego-padres",
+  "https://www.lineups.com/mlb/roster/san-francisco-giants",
+  "https://www.lineups.com/mlb/roster/seattle-mariners",
+  "https://www.lineups.com/mlb/roster/st-louis-cardinals",
+  "https://www.lineups.com/mlb/roster/tampa-bay-rays",
+  "https://www.lineups.com/mlb/roster/texas-rangers",
+  "https://www.lineups.com/mlb/roster/toronto-blue-jays",
+  "https://www.lineups.com/mlb/roster/washington-nationals"
+];
 
-var activeMLBPlayers = [];
-var months = [{text:"January",number:1}, {text:"February", number:2}, {text:"March", number:3}, {text:"April", number:4}, {text:"May", number:5}, {text:"June", number:6}, {text:"July", number:7}, {text:"August", number:8}, {text:"September", number:9}, {text:"October", number:10},{text:"November", number:11},{text:"December", number:12}]
-var days = _.range(1,32);
-// console.log(months)
-// console.log(days)
-
-_.each(months,function(month){
-	// console.log(month)
-	_.each(days, function(day){
-
-
-
-
-		request('http://www.baseball-reference.com/friv/birthdays.cgi?month='+month.number+'&day='+day, function (error, response, body) {
-			if (!error && response.statusCode == 200) {
-
-				$ = cheerio.load(body);
-				totalPlayers = $('.sortable').find('tr')
-				_.each(totalPlayers, function(player){
-					if(player.children[11].children[0].data === '2015'){
-						activeMLBPlayers.push(month.text+" "+day+", "+player.children[5].children[0].data)
-						fs.writeFileSync("./public/mlb_players.json", JSON.stringify(activeMLBPlayers))
-		
-					}
-				})
-			}
-
-		})
-	})
-})
-	
-
-
+let birthdays = [];
+teamUrls.forEach((url, i) => axios(url).then(response => {
+	const dom = cheerio.load(response.data);
+	dom(".t-content")
+  .find("td:nth-child(8)")
+  .each(function() {
+		const text = dom(this).text();
+		if (text) {
+	 fs.appendFileSync('./public/mlb.json',`"${text}",\n`)
+	}
+	});
+}));
