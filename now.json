@@ -1,3 +1,21 @@
 {
-  "version": 1
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.html*",
+      "use": "@now/static"
+    },
+    {
+      "src": "age-data.js",
+      "use": "@now/node",
+      "config": {
+        "includeFiles": ["public/**"]
+      }
+    },
+    {
+      "src": "public/**",
+      "use": "@now/static"
+    }
+  ],
+  "routes": [{ "src": "/agedata", "dest": "age-data.js" }]
 }

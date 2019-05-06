@@ -1,0 +1,174 @@
+<html>
+  <head>
+    <title>You're Much Older Than The Athletes You Cheer For</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://unpkg.com/nes.css@2.1.0/css/nes.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=VT323"
+      rel="stylesheet"
+    />
+    <style>
+      .nba {
+        color: red;
+      }
+      .nfl {
+        color: blue;
+      }
+      .mlb {
+        color: green;
+      }
+      .nhl {
+        color: purple;
+      }
+    </style>
+  </head>
+  <body
+    style="display: flex; flex-direction: column; align-items: center; font-family: VT323; background-image: linear-gradient(rgba(97, 8, 156, 0.5), rgb(247, 247, 139)),
+ url('./public/sports.gif'); padding: 24px;"
+  >
+    <h2 style="color: cyan;">
+      Enter your birthday and see what percentage of professional athletes are
+      younger than you(MM/DD/YYYY)
+    </h2>
+
+    <input
+      type="date"
+      class="nes-input"
+      id="birthday"
+      style="width: 50%; margin-bottom: 16px;"
+    />
+    <button class="nes-btn is-success" id="submit">Submit</button>
+    <div id="wrapper" style="display: flex; flex-direction: column;">
+      <h2 id="nba" style="color: mediumspringgreen;"></h2>
+      <progress
+        id="nba-progress"
+        class="nes-progress is-pattern"
+        max="100"
+        style="display: none;"
+      ></progress>
+      <h2 id="nba-age" style="color: mediumspringgreen;"></h2>
+      <h2 id="nfl" style="color: tomato;"></h2>
+      <progress
+        id="nfl-progress"
+        class="nes-progress is-pattern"
+        max="100"
+        style="display: none;"
+      ></progress>
+      <h2 id="nfl-age" style="color: tomato;"></h2>
+      <h2 id="mlb" style="color: maroon;"></h2>
+      <progress
+        id="mlb-progress"
+        class="nes-progress is-pattern"
+        max="100"
+        style="display: none;"
+      ></progress>
+      <h2 id="mlb-age" style="color: maroon;"></h2>
+    </div>
+    <div id="tweet-save" style="display: none;">
+      <span id="tweet"></span>
+    </div>
+  </body>
+  <script
+    async=""
+    src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"
+  ></script>
+  <script src="https://unpkg.com/html2canvas@1.0.0-alpha.12/dist/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/canvas2image@1.0.5/canvas2image.js"></script>
+  <script>
+    const tweetSaveDiv = document.getElementById("tweet-save");
+    const tweet = document.getElementById("tweet");
+
+    const callback = () => {
+      const birthday = document.getElementById("birthday").value;
+      fetch(`/agedata?birthday=${birthday}`)
+        .then(res => res.json())
+        .then(response => {
+          if (
+            (!document.location.search &&
+            !document.location.search.includes(birthday)) || document.location.search !== birthday
+          ) {
+            window.history.pushState(
+              null,
+              null,
+              `${document.location.pathname}?birthday=${birthday}`
+            );
+          }
+          document.getElementById("mlb").innerText = `${
+            response.mlb.percentageYounger
+          } percent of MLB players are younger than you`;
+          document.getElementById("mlb-progress").value = parseInt(
+            response.mlb.percentageYounger
+          );
+          document.getElementById("mlb-progress").style.display = "initial";
+          document.getElementById(
+            "mlb-age"
+          ).innerText = `The average age of an MLB player is ${
+            response.mlb.averageAge
+          }`;
+          document.getElementById("nba").innerText = `${
+            response.nba.percentageYounger
+          } percent of NBA players are younger than you`;
+          document.getElementById("nba-progress").value = parseInt(
+            response.nba.percentageYounger
+          );
+          document.getElementById(
+            "nba-age"
+          ).innerText = `The average age of an NBA player is ${
+            response.nba.averageAge
+          }`;
+          document.getElementById("nba-progress").style.display = "initial";
+
+          document.getElementById("nfl").innerText = `${
+            response.nfl.percentageYounger
+          } percent of NFL players are younger than you`;
+          document.getElementById("nfl-progress").value = parseInt(
+            response.nfl.percentageYounger
+          );
+          document.getElementById("nfl-progress").style.display = "initial";
+
+          document.getElementById(
+            "nfl-age"
+          ).innerText = `The average age of an NFL player is ${
+            response.nfl.averageAge
+          }`;
+          tweet.innerHTML = `<a href="https://twitter.com/intent/tweet?text=sooooo ${
+            response.nba.percentageYounger
+          } percent of nba players are younger than me, ${
+            response.nfl.percentageYounger
+          } percent of nfl players are younger than me, and ${
+            response.mlb.percentageYounger
+          } percent of mlb players are younger than me.see how you compare at https://youareold.sad.florist?birthday=${birthday}" 
+          class="twitter-share-button" 
+          data-show-count="false"
+          >
+            Tweet
+          </a>`;
+          tweetSaveDiv.style.display = "initial";
+        });
+    };
+    if (document.location.search) {
+      const queryObject = document.location.search
+        .slice(1)
+        .split("&")
+        .reduce((obj, parameter) => {
+          const [name, value] = parameter.split("=");
+          obj[name] = value;
+          return obj;
+        }, {});
+      if (queryObject.birthday) {
+        document.getElementById("birthday").value = queryObject.birthday;
+        callback();
+      }
+    }
+    document.getElementById("birthday").addEventListener("keydown", event => {
+      if (event.code === "Enter") {
+        callback();
+      }
+    });
+    document.getElementById("submit").addEventListener("click", callback);
+  </script>
+</html>

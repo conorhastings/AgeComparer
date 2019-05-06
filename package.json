@@ -9,15 +9,7 @@
     "express": "^4.10.6",
     "moment": "^2.8.4",
     "prettier": "^1.17.0",
-    "underscore": "^1.7.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
-  },
-  "engines": {
-    "node": "10"
+    "url": "^0.11.0"
   },
   "repository": {
     "type": "git",
